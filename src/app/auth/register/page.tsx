@@ -1,7 +1,7 @@
-import { LoginForm } from "@/shared/components/login-form";
+import { RegisterForm } from "@/shared/components/register-form";
 
 const Page = () => {
-  return <LoginForm />;
+  return <RegisterForm />;
 };
 
 export default Page;

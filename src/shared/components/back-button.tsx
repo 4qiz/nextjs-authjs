@@ -11,10 +11,8 @@ export const BackButton = ({
   label: string;
 }) => {
   return (
-    <Link href={href}>
-      <Button variant="link" className="font-normal w-full" size="sm">
-        {label}
-      </Button>
-    </Link>
+    <Button variant="link" className="font-normal w-full" size="sm">
+      <Link href={href}>{label}</Link>
+    </Button>
   );
 };
