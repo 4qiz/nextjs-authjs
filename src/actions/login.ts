@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import { LoginSchema } from "@/shared/schemas/schemas";
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT_URL } from "@/routes";
 import { AuthError } from "next-auth";
 
@@ -15,13 +15,13 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
   const { email, password } = validatedFiels.data;
   try {
-    signIn("credentials", {
+    //await signOut();
+    await signIn("credentials", {
       email,
       password,
       redirectTo: DEFAULT_LOGIN_REDIRECT_URL,
     });
   } catch (error) {
-    console.log("----------------------------------");
     if (error instanceof AuthError) {
       if (error.type == "CredentialsSignin")
         return { error: "Invalid credentials" };

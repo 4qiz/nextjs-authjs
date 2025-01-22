@@ -8,6 +8,7 @@ export default async function Home() {
       {JSON.stringify(session)}{" "}
       <form
         action={async () => {
+          "use server";
           await signOut();
         }}
       >
