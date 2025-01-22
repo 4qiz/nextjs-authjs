@@ -2,6 +2,9 @@
 
 import * as z from "zod";
 import { LoginSchema } from "@/shared/schemas/schemas";
+import { signIn } from "@/auth";
+import { DEFAULT_LOGIN_REDIRECT_URL } from "@/routes";
+import { AuthError } from "next-auth";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
   const validatedFiels = await LoginSchema.safeParseAsync(values);
@@ -9,5 +12,21 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
   if (!validatedFiels.success) {
     return { error: "validate error" };
   }
-  return { success: "success" };
+
+  const { email, password } = validatedFiels.data;
+  try {
+    signIn("credentials", {
+      email,
+      password,
+      redirectTo: DEFAULT_LOGIN_REDIRECT_URL,
+    });
+  } catch (error) {
+    console.log("----------------------------------");
+    if (error instanceof AuthError) {
+      if (error.type == "CredentialsSignin")
+        return { error: "Invalid credentials" };
+      return { error: "Error" };
+    }
+    throw error;
+  }
 };
