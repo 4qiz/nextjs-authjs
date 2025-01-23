@@ -20,6 +20,7 @@ import { FormSuccess } from "./form-success";
 import { login } from "@/actions/login";
 import { useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
+import { routes } from "@/routes";
 
 export const LoginForm = ({}: {}) => {
   const searchParams = useSearchParams();
@@ -50,7 +51,6 @@ export const LoginForm = ({}: {}) => {
 
     startTransition(() => {
       login(values).then((data) => {
-        console.log(data);
         setError(data?.error);
         setSuccess(data?.success);
       });
@@ -61,7 +61,7 @@ export const LoginForm = ({}: {}) => {
     <CardWrapper
       headerLabel="Welcome back"
       backButtonLabel="Dont have an account"
-      backButtonHref="/auth/register"
+      backButtonHref={routes.signUp()}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

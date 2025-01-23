@@ -3,11 +3,12 @@ import authConfig from "./auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "../db";
 import { getUserById } from "../../services/user";
+import { routes } from "@/routes";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
-    signIn: "/auth/login",
-    error: "/auth/error",
+    signIn: routes.signIn(),
+    error: routes.authError(),
   },
   callbacks: {
     // first

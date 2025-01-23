@@ -19,6 +19,7 @@ import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
 import { register } from "@/actions/register";
 import { useState, useTransition } from "react";
+import { routes } from "@/routes";
 
 export const RegisterForm = ({}: {}) => {
   const [error, setError] = useState<string | undefined>("");
@@ -54,7 +55,7 @@ export const RegisterForm = ({}: {}) => {
     <CardWrapper
       headerLabel="Create an account"
       backButtonLabel="Already have an account?"
-      backButtonHref="/auth/login"
+      backButtonHref={routes.signIn()}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
