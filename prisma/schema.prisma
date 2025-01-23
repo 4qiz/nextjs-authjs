@@ -49,3 +49,11 @@ enum UserRole {
   USER
   ADMIN
 }
+
+model VerificationToken {
+  token String @id 
+  email String
+  expires DateTime
+
+  @@unique([email, token])
+}

@@ -32,16 +32,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session;
     },
-    // third
-    async signIn({ user }) {
-      // if (!user.id) {
-      //   return false;
-      // }
-      // const existingUser = await getUserById(user.id);
+    // third, token confirmation, check email verification
+    async signIn({ user, account }) {
+      // allow oauth without email email verification
+      if (account?.provider !== "credentials") {
+        return true;
+      }
 
-      // if (!existingUser || !existingUser.emailVerified) {
-      //   return false;
-      // }
+      if (!user.id) {
+        return false;
+      }
+      const existingUser = await getUserById(user.id);
+
+      if (!existingUser?.emailVerified) {
+        return false;
+      }
+
       return true;
     },
   },

@@ -5,6 +5,8 @@ import { RegisterSchema } from "@/shared/schemas/schemas";
 import bcryptjs from "bcryptjs";
 import { prisma } from "@/shared/lib/db";
 import { getUserByEmail } from "@/shared/services/user";
+import { generateVerificationToken } from "@/shared/lib/tokens";
+import { sendVerificationEmail } from "@/shared/lib/email/resend";
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFiels = await RegisterSchema.safeParseAsync(values);
@@ -31,5 +33,9 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     },
   });
 
+  // token confirmation
+  const verificationToken = await generateVerificationToken(email);
+  await sendVerificationEmail(verificationToken.email, verificationToken.token);
+  //
   return { success: "success" };
 };
