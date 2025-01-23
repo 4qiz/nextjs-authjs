@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import { LoginSchema } from "@/shared/schemas/schemas";
-import { signIn, signOut } from "@/auth";
+import { signIn } from "@/shared/lib/auth-js/auth";
 import { DEFAULT_LOGIN_REDIRECT_URL } from "@/routes";
 import { AuthError } from "next-auth";
 
@@ -15,7 +15,6 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
   const { email, password } = validatedFiels.data;
   try {
-    //await signOut();
     await signIn("credentials", {
       email,
       password,

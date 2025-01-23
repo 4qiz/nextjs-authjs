@@ -1,4 +1,4 @@
-import { auth, signOut } from "@/auth";
+import { auth, signOut } from "@/shared/lib/auth-js/auth";
 import { Button } from "@/shared/ui/button";
 
 export default async function Home() {

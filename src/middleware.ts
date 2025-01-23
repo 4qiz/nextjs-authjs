@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import authConfig from "./auth.config";
+import authConfig from "./shared/lib/auth-js/auth.config";
 import NextAuth from "next-auth";
 import {
   apiAuthPrefix,
