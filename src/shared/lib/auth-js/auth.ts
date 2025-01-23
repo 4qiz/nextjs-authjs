@@ -5,6 +5,10 @@ import { prisma } from "../db";
 import { getUserById } from "../../services/user";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  pages: {
+    signIn: "/auth/login",
+    error: "/auth/error",
+  },
   callbacks: {
     // first
     async jwt({ token }) {
@@ -39,6 +43,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       //   return false;
       // }
       return true;
+    },
+  },
+  events: {
+    async linkAccount({ user }) {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          emailVerified: new Date(),
+        },
+      });
     },
   },
   adapter: PrismaAdapter(prisma),
