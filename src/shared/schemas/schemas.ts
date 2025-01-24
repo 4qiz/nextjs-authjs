@@ -10,3 +10,11 @@ export const RegisterSchema = z.object({
   email: z.string().email({ message: "Неправильный email" }),
   password: z.string().min(6, { message: "Придумай хоть немного посложнее" }),
 });
+
+export const ResetSchema = z.object({
+  email: z.string().email({ message: "Неправильный email" }),
+});
+
+export const NewPasswordSchema = z.object({
+  password: z.string().min(6, { message: "Придумай хоть немного посложнее" }),
+});

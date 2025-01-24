@@ -1,10 +1,12 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useState, useTransition } from "react";
 import { CardWrapper } from "./card-wrapper";
+import { NewPasswordSchema } from "../schemas/schemas";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { LoginSchema } from "../schemas/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { routes } from "@/routes";
 import {
   Form,
   FormControl,
@@ -14,44 +16,36 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
-import { login } from "@/actions/login";
-import { useState, useTransition } from "react";
+import { Button } from "../ui/button";
 import { useSearchParams } from "next/navigation";
-import { routes } from "@/routes";
-import Link from "next/link";
+import { newPassword } from "@/actions/new-password";
 
-export const LoginForm = ({}: {}) => {
+export const NewPasswordForm = () => {
   const searchParams = useSearchParams();
-  const urlError = searchParams.get("error");
-
+  const token = searchParams.get("token");
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
-  if (urlError === "OAuthAccountNotLinked") {
-    setError("Email used by other OAuth service");
-  }
 
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<z.infer<typeof NewPasswordSchema>>({
+    resolver: zodResolver(NewPasswordSchema),
     defaultValues: {
-      email: "",
       password: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = (values: z.infer<typeof NewPasswordSchema>) => {
     setError(undefined);
     setSuccess(undefined);
 
     // сдесь можно с логином и паролем делать всё что захочешь
-    // values: { email: string; password: string; }
+    // values: { email: string; }
 
     startTransition(() => {
-      login(values).then((data) => {
+      newPassword(values, token).then((data) => {
         setError(data?.error);
         setSuccess(data?.success);
       });
@@ -60,9 +54,10 @@ export const LoginForm = ({}: {}) => {
 
   return (
     <CardWrapper
-      headerLabel="Welcome back"
-      backButtonLabel="Dont have an account"
-      backButtonHref={routes.signUp()}
+      headerLabel="Enter a new password"
+      backButtonLabel="Back to login"
+      backButtonHref={routes.signIn()}
+      showSocial={false}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -70,42 +65,18 @@ export const LoginForm = ({}: {}) => {
             {/* email */}
             <FormField
               control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={isPending}
-                      {...field}
-                      placeholder="email@example.com"
-                      type="email"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* password */}
-            <FormField
-              control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>New password</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={isPending}
                       {...field}
                       placeholder="*****"
                       type="password"
-                      disabled={isPending}
                     />
                   </FormControl>
-                  {/* Forgot password */}
-                  <Button variant={"link"} asChild className="px-0 font-normal">
-                    <Link href={routes.authReset()}>Forgot password</Link>
-                  </Button>
                   <FormMessage />
                 </FormItem>
               )}
@@ -116,7 +87,7 @@ export const LoginForm = ({}: {}) => {
           <FormSuccess message={success ?? ""} />
 
           <Button type="submit" className="w-full" disabled={isPending}>
-            Login
+            Set new password
           </Button>
         </form>
       </Form>

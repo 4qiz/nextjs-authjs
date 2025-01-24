@@ -20,6 +20,7 @@ export const getTokenByToken = async (token: string) => {
         token,
       },
     });
+
     return verificationToken;
   } catch (error) {
     return null;

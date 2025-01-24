@@ -14,6 +14,7 @@ export const generateVerificationToken = async (email: string) => {
     });
   }
 
+  // cringe arhitecture (should be moved to services)
   const newToken = await prisma.verificationToken.create({
     data: {
       token,
