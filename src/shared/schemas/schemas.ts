@@ -3,6 +3,8 @@ import * as z from "zod";
 export const LoginSchema = z.object({
   email: z.string().email({ message: "Неправильный email" }),
   password: z.string().nonempty({ message: "Без пароля нельзя)" }),
+  // 2FA
+  code: z.optional(z.string()),
 });
 
 export const RegisterSchema = z.object({

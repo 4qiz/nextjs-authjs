@@ -15,10 +15,12 @@ model User {
   emailVerified DateTime?
   image         String?
   role          UserRole @default(USER)
-
+  password String?
+  isTwoFactorEnabled Boolean @default(false)
+  twoFactorConfirmation TwoFactorConfirmation? 
+  
   accounts      Account[]
 
-  password String?
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -56,4 +58,20 @@ model VerificationToken {
   expires DateTime
 
   @@unique([email, token])
+}
+
+model TwoFactorToken {
+  id String @id @default(cuid())
+  token String @unique
+  email String 
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorConfirmation{
+  id String @id @default(cuid())
+  userId String @unique
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
 }
