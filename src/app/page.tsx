@@ -10,7 +10,7 @@ export default async function Home() {
         </h1>
         <p className="text-foreground text-lg">Auth service</p>
         <div>
-          <LoginButton>
+          <LoginButton asChild mode="modal">
             <Button>Sign in</Button>
           </LoginButton>
         </div>

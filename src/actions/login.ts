@@ -20,7 +20,10 @@ import {
 } from "@/shared/services/two-factor-confirmation";
 import { prisma } from "@/shared/lib/db";
 
-export const login = async (values: z.infer<typeof LoginSchema>) => {
+export const login = async (
+  values: z.infer<typeof LoginSchema>,
+  callbackUrl?: string | null
+) => {
   const validatedFiels = await LoginSchema.safeParseAsync(values);
 
   if (!validatedFiels.success) {
@@ -85,7 +88,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT_URL,
+      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT_URL,
     });
   } catch (error) {
     if (error instanceof AuthError) {

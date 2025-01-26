@@ -6,6 +6,7 @@ import {
   authRoutes,
   DEFAULT_LOGIN_REDIRECT_URL,
   publicRoutes,
+  routes,
 } from "./routes";
 
 // Use only one of the two middleware options below
@@ -43,7 +44,16 @@ export default auth(async function middleware(req: NextRequest) {
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
 
   if (!isLoggedIn && !isPublicRoute) {
-    return NextResponse.redirect(new URL("/auth/login", nextUrl));
+    let callbackUrl = nextUrl.pathname;
+    if (nextUrl.search) {
+      callbackUrl += nextUrl.search;
+    }
+
+    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+
+    return NextResponse.redirect(
+      new URL(`${routes.signIn()}?callbackUrl=${encodedCallbackUrl}`, nextUrl)
+    );
   }
 
   return NextResponse.next();
