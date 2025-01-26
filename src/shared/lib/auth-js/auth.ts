@@ -5,6 +5,7 @@ import { prisma } from "../db";
 import { getUserById } from "../../services/user";
 import { routes } from "@/routes";
 import { getTwoFactorConfirmationByUserId } from "@/shared/services/two-factor-confirmation";
+import { getAccountByUserId } from "@/shared/services/account";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
@@ -21,6 +22,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (!existingUser) {
         return token;
       }
+
+      const existingAccount = await getAccountByUserId(existingUser.id);
+
+      token.isOAuth = !!existingAccount;
+
+      token.name = existingUser.name;
+      token.email = existingUser.email;
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
       return token; // токен передаётся в сессию
@@ -35,6 +43,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       if (session.user) {
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
+        session.user.name = token.name;
+        session.user.email = token.email || "";
+        session.user.isOAuth = token.isOAuth as boolean;
       }
       return session;
     },
