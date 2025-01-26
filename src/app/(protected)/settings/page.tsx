@@ -1,19 +1,21 @@
-import { auth, signOut } from "@/shared/lib/auth-js/auth";
+"use client";
+
+import { logout } from "@/actions/logout";
+import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { Button } from "@/shared/ui/button";
 
-export default async function Home() {
-  const session = await auth();
+const Page = () => {
+  const user = useCurrentUser();
+  const onClick = () => {
+    logout();
+  };
   return (
-    <>
-      {JSON.stringify(session)}{" "}
-      <form
-        action={async () => {
-          "use server";
-          await signOut();
-        }}
-      >
-        <Button type="submit">Sign out</Button>
-      </form>
-    </>
+    <div className="bg-background p-10 rounded-xl">
+      <Button type="submit" onClick={onClick}>
+        Sign out
+      </Button>
+    </div>
   );
-}
+};
+
+export default Page;

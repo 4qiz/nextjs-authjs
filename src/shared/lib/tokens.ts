@@ -4,7 +4,7 @@ import { prisma } from "./db";
 import crypto from "crypto";
 import { getTwoFactorTokenByEmail } from "../services/two-factor-confirmation";
 
-const EXPIRATION_TIME = 60 * 60 * 1000; // 1 hour
+const EXPIRATION_TIME = 10 * 60 * 1000; // 10 minutes
 
 export const generateVerificationToken = async (email: string) => {
   const token = uuidv4();

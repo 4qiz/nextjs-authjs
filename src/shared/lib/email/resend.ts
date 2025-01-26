@@ -72,7 +72,7 @@ export const sendTwoFactorEmail = async (
 
   await sendEmail({
     email,
-    subject: "Reset password",
+    subject: "Confirm login",
     html,
   });
 };
